@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FANTOM // CYBER SCRIPTS</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#030605;color:#00ff88;
+  font-family:monospace;padding:18px;
+}
+header{
+  text-align:center;padding:25px 10px;
+  border-bottom:1px solid #00ff8855;
+}
+h1{font-size:clamp(28px,8vw,48px);text-shadow:0 0 15px #00ff88}
+.subtitle{color:#00d9ff}
+nav{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+button{
+  background:#07140e;color:#00ff88;
+  border:1px solid #00ff88;padding:11px 14px;
+  font-family:monospace;cursor:pointer;
+}
+button:hover{background:#00ff88;color:#001108}
+main{max-width:850px;margin:auto}
+.card{
+  border:1px solid #00ff8855;background:#050b08;
+  padding:18px;margin:18px 0;
+  box-shadow:0 0 18px #00ff8810;
+}
+h2{color:#00d9ff;font-size:19px}
+pre{
+  background:#010302;color:#9dffbd;
+  border:1px solid #183d29;padding:14px;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  overflow-x:auto;font-size:13px;
+}
+.desc{color:#a6c9b5;line-height:1.6}
+#terminal{min-height:110px;line-height:1.8;overflow-wrap:anywhere}
+.prompt{display:flex;gap:8px;margin-top:12px}
+input{
+  min-width:0;flex:1;background:#010302;color:#00ff88;
+  border:1px solid #00ff88;padding:12px;font-family:monospace;
+}
+footer{text-align:center;color:#527963;padding:25px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>⛧ FANTOM ⛧</h1>
+  <div class="subtitle">// CYBER SCRIPTS DATABASE //</div>
+  <p>CODE • CREATE • EXPLORE</p>
+</header>
+
+<nav>
+  <button onclick="showSection('scripts')">SCRIPTS</button>
+  <button onclick="showSection('terminalSection')">TERMINAL</button>
+  <button onclick="showSection('about')">À PROPOS</button>
+</nav>
+
+<main>
+<section id="scripts">
+  <div class="card">
+    <h2>[01] Python — Hello World</h2>
+    <p class="desc">Un premier script Python pour tester ton environnement.</p>
+    <pre id="code1">print("FANTOM SYSTEM ONLINE")
+print("Bienvenue dans mon terminal !")</pre>
+    <button onclick="copyCode('code1',this)">COPIER LE SCRIPT</button>
+  </div>
+
+  <div class="card">
+    <h2>[02] JavaScript — Horloge</h2>
+    <p class="desc">Affiche l'heure actuelle dans la console du navigateur.</p>
+    <pre id="code2">console.log("FANTOM // Heure actuelle :");
+console.log(new Date().toLocaleTimeString());</pre>
+    <button onclick="copyCode('code2',this)">COPIER LE SCRIPT</button>
+  </div>
+
+  <div class="card">
+    <h2>[03] HTML — Message cyber</h2>
+    <p class="desc">Une page simple avec un message lumineux.</p>
+    <pre id="code3">&lt;h1 style="color:#00ff88;background:#030605"&gt;
+  FANTOM SYSTEM ONLINE
+&lt;/h1&gt;</pre>
+    <button onclick="copyCode('code3',this)">COPIER LE SCRIPT</button>
+  </div>
+</section>
+
+<section id="terminalSection" class="card" hidden>
+  <h2>FANTOM // TERMINAL</h2>
+  <div id="terminal">
+    <div>[+] Initialisation...</div>
+    <div>[+] Terminal prêt.</div>
+    <div class="subtitle">Tape help pour les commandes.</div>
+  </div>
+  <div class="prompt">
+    <input id="cmd" placeholder="Entre une commande..." autocomplete="off">
+    <button onclick="runCommand()">EXEC</button>
+  </div>
+</section>
+
+<section id="about" class="card" hidden>
+  <h2>À PROPOS DE FANTOM</h2>
+  <p class="desc">
+    FANTOM est un projet personnel de scripts et de programmation.
+    Les commandes du terminal sont des démonstrations locales.
+  </p>
+  <p class="subtitle">STAY CURIOUS // KEEP LEARNING</p>
+</section>
+</main>
+
+<footer>FANTOM // CYBER SCRIPTS — SITE DE DÉMONSTRATION</footer>
+
+<script>
+function showSection(id){
+  ["scripts","terminalSection","about"].forEach(section=>{
+    document.getElementById(section).hidden = section !== id;
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function copyCode(id,button){
+  const text=document.getElementById(id).textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    button.textContent="COPIÉ !";
+  }catch(e){
+    const area=document.createElement("textarea");
+    area.value=text;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    button.textContent="COPIÉ !";
+  }
+  setTimeout(()=>button.textContent="COPIER LE SCRIPT",1500);
+}
+
+const terminal=document.getElementById("terminal");
+const input=document.getElementById("cmd");
+
+function runCommand(){
+  const cmd=input.value.trim().toLowerCase();
+  if(!cmd)return;
+
+  const line=document.createElement("div");
+  line.textContent="FANTOM > "+cmd;
+  terminal.appendChild(line);
+
+  if(cmd==="clear"){
+    terminal.innerHTML="";
+  }else{
+    const out=document.createElement("div");
+    if(cmd==="help"){
+      out.textContent="Commandes : help, status, scan, date, clear";
+    }else if(cmd==="status"){
+      out.textContent="FANTOM : EN LIGNE | Mode démonstration";
+    }else if(cmd==="scan"){
+      out.textContent="Simulation terminée. Aucun réseau scanné.";
+    }else if(cmd==="date"){
+      out.textContent=new Date().toLocaleString("fr-FR");
+    }else{
+      out.textContent="Commande inconnue. Tape help.";
+    }
+    terminal.appendChild(out);
+  }
+  input.value="";
+  terminal.scrollTop=terminal.scrollHeight;
+}
+
+input.addEventListener("keydown",event=>{
+  if(event.key==="Enter")runCommand();
+});
+</script>
+</body>
+</html>
