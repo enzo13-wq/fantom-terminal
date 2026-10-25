@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FANTOM // CYBER TERMINAL</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #050807;
+      color: #00ff88;
+      font-family: monospace;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 30px 15px;
+      text-align: center;
+      border-bottom: 1px solid #00ff8844;
+      background: #08120e;
+    }
+
+    header h1 {
+      font-size: 38px;
+      letter-spacing: 5px;
+      text-shadow: 0 0 15px #00ff88;
+    }
+
+    header p {
+      margin-top: 12px;
+      color: #8affbd;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 7px 12px;
+      border: 1px solid #00ff88;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    main {
+      width: 92%;
+      max-width: 850px;
+      margin: 25px auto;
+    }
+
+    h2 {
+      margin: 25px 0 15px;
+      font-size: 19px;
+    }
+
+    .terminal, .card {
+      background: #09110d;
+      border: 1px solid #00ff8844;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 15px #00ff8808;
+    }
+
+    .terminal {
+      min-height: 180px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .terminal-title {
+      color: #fff;
+      border-bottom: 1px solid #00ff8833;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .muted {
+      color: #75a88b;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .card p {
+      color: #9cb7a5;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: transparent;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      border-radius: 5px;
+      padding: 10px 13px;
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00ff88;
+      color: #001509;
+    }
+
+    .commands {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      color: #557965;
+      padding: 25px 10px;
+      border-top: 1px solid #00ff8833;
+      margin-top: 35px;
+      font-size: 12px;
+    }
+
+    .green {
+      color: #00ff88;
+    }
+
+    .red {
+      color: #ff5555;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>FANTOM</h1>
+    <p>// CYBER TERMINAL //</p>
+    <div class="status">● SYSTÈME EN LIGNE</div>
+  </header>
+
+  <main>
+    <h2>┌── TERMINAL D'ACCÈS</h2>
+
+    <section class="terminal">
+      <div class="terminal-title">fantom@cyber:~$</div>
+      <div id="output">Bienvenue sur FANTOM.
+Tape une commande pour commencer.</div>
+
+      <div class="commands">
+        <button onclick="runCommand('help')">help</button>
+        <button onclick="runCommand('status')">status</button>
+        <button onclick="runCommand('scan')">scan</button>
+        <button onclick="runCommand('date')">date</button>
+        <button onclick="runCommand('clear')">clear</button>
+      </div>
+    </section>
+
+    <h2>┌── CYBER SCRIPTS</h2>
+
+    <div class="cards">
+      <section class="card">
+        <h3>01 // SYSTEM CHECK</h3>
+        <p>Affiche un diagnostic fictif du terminal.</p>
+        <button onclick="showScript('system')">LANCER</button>
+      </section>
+
+      <section class="card">
+        <h3>02 // NETWORK SCAN</h3>
+        <p>Animation de scan visuelle, sans scanner de vrai réseau.</p>
+        <button onclick="showScript('network')">LANCER</button>
+      </section>
+
+      <section class="card">
+        <h3>03 // ACCESS LOG</h3>
+        <p>Affiche des événements fictifs dans les journaux.</p>
+        <button onclick="showScript('logs')">LANCER</button>
+      </section>
+
+      <section class="card">
+        <h3>04 // MATRIX MODE</h3>
+        <p>Affiche une animation de caractères façon cyber.</p>
+        <button onclick="showScript('matrix')">LANCER</button>
+      </section>
+    </div>
+
+    <h2>┌── SORTIE DES SCRIPTS</h2>
+    <section class="terminal">
+      <div class="terminal-title">script_output.log</div>
+      <div id="scriptOutput" class="muted">En attente d'une commande...</div>
+    </section>
+  </main>
+
+  <footer>
+    FANTOM // CYBER TERMINAL<br>
+    Interface de démonstration — simulations locales uniquement.
+  </footer>
+
+  <script>
+    const output = document.getElementById("output");
+    const scriptOutput = document.getElementById("scriptOutput");
+
+    function runCommand(command) {
+      const now = new Date().toLocaleString("fr-FR");
+
+      const commands = {
+        help: "COMMANDES DISPONIBLES\nhelp   - affiche l'aide\nstatus - état du terminal\nscan   - simulation de scan\ndate   - date et heure\nclear  - efface la sortie",
+        status: "STATUT : OPÉRATIONNEL\nINTERFACE : ACTIVE\nMODE : DÉMONSTRATION",
+        scan: "Initialisation du scan visuel...\n[OK] Interface locale\n[OK] Terminal actif\n[OK] Démonstration terminée\nAucun réseau réel n'a été scanné.",
+        date: "DATE / HEURE : " + now,
+        clear: ""
+      };
+
+      output.textContent = commands[command] || "Commande inconnue. Tape help.";
+    }
+
+    function showScript(type) {
+      scriptOutput.classList.remove("muted");
+
+      const scripts = {
+        system:
+          "[SYSTEM CHECK]\n" +
+          "[OK] Interface chargée\n" +
+          "[OK] JavaScript actif\n" +
+          "[OK] Terminal prêt\n" +
+          "Diagnostic de démonstration terminé.",
+
+        network:
+          "[NETWORK SCAN SIMULÉ]\n" +
+          "Analyse visuelle en cours...\n" +
+          "[OK] Nœud fictif : NODE-01\n" +
+          "[OK] Nœud fictif : NODE-02\n" +
+          "[OK] Simulation terminée\n" +
+          "Aucun appareil réel n'a été recherché.",
+
+        logs:
+          "[ACCESS LOG]\n" +
+          "09:41 - Session de démonstration ouverte\n" +
+          "09:42 - Terminal chargé\n" +
+          "09:43 - Utilisateur fictif : FANTOM\n" +
+          "Journal de démonstration affiché.",
+
+        matrix:
+          "[MATRIX MODE]\n" +
+          "01000110 01000001 01001110 01010100\n" +
+          "01001111 01001101 01000001 01000011\n" +
+          ">>> SIGNAL VISUEL ACTIVÉ <<<\n" +
+          "Animation de démonstration terminée."
+      };
+
+      scriptOutput.textContent = scripts[type] || "Script inconnu.";
+    }
+  </script>
+</body>
+</html>
